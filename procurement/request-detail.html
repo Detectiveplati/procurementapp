@@ -129,18 +129,7 @@
           <span class="field-lbl">Quantity</span>
           <span class="field-val" id="dQuantity">—</span>
         </div>
-        <div class="field-row">
-          <span class="field-lbl">Est. Price</span>
-          <span class="field-val" id="dPrice">—</span>
-        </div>
-        <div class="field-row">
-          <span class="field-lbl">Supplier</span>
-          <span class="field-val" id="dSupplier">—</span>
-        </div>
-        <div class="field-row">
-          <span class="field-lbl">Date Needed</span>
-          <span class="field-val" id="dDateNeeded">—</span>
-        </div>
+
       </div>
       <div class="timestamps">
         <span>Submitted: <strong id="dCreated">—</strong></span>
@@ -241,9 +230,6 @@
 
       document.getElementById('dQuantity').textContent =
         r.quantity ? r.quantity + (r.unit ? ' ' + r.unit : '') : '—';
-      setField('dPrice',      r.estimatedPrice);
-      setField('dSupplier',   r.supplier);
-      setField('dDateNeeded', r.dateNeeded);
       document.getElementById('dCreated').textContent = fmt(r.createdAt);
       document.getElementById('dUpdated').textContent = fmt(r.updatedAt);
 
