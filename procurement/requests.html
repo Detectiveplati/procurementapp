@@ -3,28 +3,37 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>All Requests 所有采购申请</title>
+  <title>All Requests · Central Kitchen Procurement</title>
   <link rel="stylesheet" href="css/styles.css"/>
 </head>
 <body>
 
 <header>
-  <h1>📊 All Requests 所有申请</h1>
+  <div class="header-content">
+    <img class="site-logo" src="assets/logo.png" onerror="this.style.display='none'" alt=""/>
+    <div class="header-text">
+      <h1>All Procurement Requests</h1>
+      <p>所有采购申请 · Central Kitchen</p>
+    </div>
+  </div>
   <nav class="nav-links">
     <a href="/">🏠 Home</a>
-    <a href="/request">+ New Request</a>
+    <a href="/request" class="accent">+ New Request</a>
   </nav>
 </header>
 
 <main>
   <!-- Stats -->
-  <div class="stats-bar" id="statsBar">
+  <div class="card" style="margin-bottom:16px;">
+    <h2>📊 Overview</h2>
+    <div class="stats-bar" id="statsBar">
     <div class="stat-box"><div class="num" id="statTotal">—</div><div class="lbl">Total</div></div>
     <div class="stat-box"><div class="num" id="statPending">—</div><div class="lbl">Pending</div></div>
     <div class="stat-box"><div class="num" id="statApproved">—</div><div class="lbl">Approved</div></div>
     <div class="stat-box"><div class="num" id="statOrdered">—</div><div class="lbl">Ordered</div></div>
     <div class="stat-box"><div class="num" id="statReceived">—</div><div class="lbl">Received</div></div>
   </div>
+  </div><!-- end .card -->
 
   <!-- Filters -->
   <div class="filters">
@@ -155,7 +164,7 @@
 
           <!-- Purchaser checklist -->
           <details style="margin-top:12px;">
-            <summary style="cursor:pointer;font-size:0.85rem;font-weight:600;color:var(--primary);user-select:none;">
+            <summary style="cursor:pointer;font-size:0.85rem;font-weight:600;color:var(--accent);user-select:none;">
               ☑ Purchaser Checklist 采购核对 (${Object.values(cl).filter(Boolean).length}/${Object.keys(CHECKLIST_LABELS).length})
             </summary>
             <div class="checklist" id="cl-${r._id}">${checklistHTML}</div>

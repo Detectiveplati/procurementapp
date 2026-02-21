@@ -9,28 +9,36 @@
 <body>
 
 <header>
-  <h1>🛒 Central Kitchen Procurement</h1>
+  <div class="header-content">
+    <img class="site-logo" src="assets/logo.png" onerror="this.style.display='none'" alt=""/>
+    <div class="header-text">
+      <h1>Central Kitchen Procurement</h1>
+      <p>中央厨房采购管理 · Scan the QR code to submit a request</p>
+    </div>
+  </div>
   <nav class="nav-links">
     <a href="/requests">📊 All Requests</a>
-    <a href="/request">+ New Request</a>
+    <a href="/request" class="accent">+ New Request</a>
   </nav>
 </header>
 
 <main>
-  <div class="qr-container">
-    <h2>Scan to Submit a Request</h2>
-    <p>Staff can scan this QR code with any phone or tablet to fill in a procurement request.</p>
-    <img class="qr-code" src="/api/qr" alt="QR Code"/>
-    <p class="qr-url" id="formUrl"></p>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px;">
-      <a href="/request" class="btn btn-primary">📋 Open Request Form</a>
-      <a href="/requests" class="btn btn-outline">📊 View All Requests</a>
-      <a href="/api/qr" download="procurement-qr.png" class="btn btn-outline">⬇ Download QR</a>
+  <div class="card" style="max-width:700px;margin:0 auto 20px;">
+    <div class="qr-container">
+      <h2>📱 Scan to Submit a Request</h2>
+      <p>Staff can scan this QR code with any phone or tablet to submit a procurement request.</p>
+      <img class="qr-code" src="/api/qr" alt="QR Code"/>
+      <p class="qr-url" id="formUrl"></p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px;">
+        <a href="/request" class="btn btn-primary">📋 Open Request Form</a>
+        <a href="/requests" class="btn btn-outline">📊 View All Requests</a>
+        <a href="/api/qr" download="procurement-qr.png" class="btn btn-outline">⬇ Download QR</a>
+      </div>
     </div>
   </div>
 
-  <div class="card" style="max-width:500px;margin:0 auto;">
-    <h3>Quick Stats</h3>
+  <div class="card" style="max-width:700px;margin:0 auto;">
+    <h2>📊 Quick Stats</h2>
     <div class="stats-bar" id="statsBar">
       <div class="stat-box"><div class="num" id="statTotal">—</div><div class="lbl">Total</div></div>
       <div class="stat-box"><div class="num" id="statPending">—</div><div class="lbl">Pending</div></div>
