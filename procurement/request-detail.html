@@ -129,7 +129,10 @@
           <span class="field-lbl">Quantity</span>
           <span class="field-val" id="dQuantity">—</span>
         </div>
-
+        <div class="field-row">
+          <span class="field-lbl">Department</span>
+          <span class="field-val" id="dDepartment">—</span>
+        </div>
       </div>
       <div class="timestamps">
         <span>Submitted: <strong id="dCreated">—</strong></span>
@@ -151,10 +154,6 @@
         <div class="field-row">
           <span class="field-lbl">Name</span>
           <span class="field-val" id="dName">—</span>
-        </div>
-        <div class="field-row">
-          <span class="field-lbl">Department</span>
-          <span class="field-val" id="dDepartment">—</span>
         </div>
       </div>
       <div id="commentWrap" style="display:none;">
@@ -238,8 +237,8 @@
         document.getElementById('cardPhoto').style.display = '';
       }
 
-      setField('dName',       r.requestorName);
       setField('dDepartment', r.department);
+      setField('dName',       r.requestorName);
       if (r.comments) {
         document.getElementById('dComments').textContent = r.comments;
         document.getElementById('commentWrap').style.display = '';
