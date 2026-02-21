@@ -137,6 +137,9 @@
         <span>Submitted: <strong id="dCreated">—</strong></span>
         <span>Updated: <strong id="dUpdated">—</strong></span>
       </div>
+      <div id="dCompletedWrap" style="display:none;margin-top:8px;">
+        <span style="font-size:0.82rem;">✅ Done: <strong id="dCompleted" style="color:var(--success);">—</strong></span>
+      </div>
     </div>
 
     <!-- Photo -->
@@ -225,6 +228,13 @@
       document.getElementById('dCreated').textContent = fmt(r.createdAt);
       document.getElementById('dUpdated').textContent = fmt(r.updatedAt);
 
+      if (r.completedAt) {
+        document.getElementById('dCompleted').textContent = fmt(r.completedAt);
+        document.getElementById('dCompletedWrap').style.display = '';
+      } else {
+        document.getElementById('dCompletedWrap').style.display = 'none';
+      }
+
       if (r.imagePath) {
         document.getElementById('dImage').src = r.imagePath;
         document.getElementById('cardPhoto').style.display = '';
@@ -259,13 +269,19 @@
   async function saveStatus() {
     const status = document.getElementById('statusSelect').value;
     try {
-      await fetch(`/api/requests/${id}`, {
+      const updated = await fetch(`/api/requests/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
-      });
+      }).then(r => r.json());
       document.getElementById('dStatusBadge').innerHTML =
         `<span class="badge ${STATUS_CLS[status] || 'badge-pending'}">${status}</span>`;
+      if (updated.completedAt) {
+        document.getElementById('dCompleted').textContent = fmt(updated.completedAt);
+        document.getElementById('dCompletedWrap').style.display = '';
+      } else {
+        document.getElementById('dCompletedWrap').style.display = 'none';
+      }
       flash('statusMsg');
     } catch (err) { alert('Save failed: ' + err.message); }
   }
