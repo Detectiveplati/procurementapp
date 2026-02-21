@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -6,7 +6,6 @@
   <title>Request Detail · Central Kitchen Procurement</title>
   <link rel="stylesheet" href="css/styles.css"/>
   <style>
-    /* ── Back link ── */
     .back-link {
       display: inline-flex; align-items: center; gap: 6px;
       font-size: 0.82rem; color: var(--muted); text-decoration: none;
@@ -14,174 +13,89 @@
     }
     .back-link:hover { color: var(--accent); }
 
-    /* ── Hero card ── */
-    .hero-card {
-      background: linear-gradient(135deg, #fff 0%, #fff5f2 100%);
-      border: 1px solid var(--border);
-      border-left: 6px solid var(--accent);
-      border-radius: 16px;
-      padding: 24px 28px;
-      margin-bottom: 20px;
-      box-shadow: 0 6px 18px var(--shadow);
-    }
-    .hero-name {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: var(--ink);
-      line-height: 1.2;
-      margin-bottom: 4px;
-    }
-    .hero-zh {
-      font-size: 1rem;
-      color: var(--muted);
-      margin-bottom: 14px;
-    }
-    .hero-badges {
-      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
-    }
-    .hero-timestamps {
-      margin-top: 14px;
-      font-size: 0.75rem;
-      color: var(--muted);
-      display: flex; gap: 20px; flex-wrap: wrap;
-    }
-    .hero-timestamps strong { color: var(--ink); }
-
-    /* ── Two-column layout ── */
-    .detail-layout {
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 20px;
-      align-items: start;
-    }
-    @media (max-width: 800px) { .detail-layout { grid-template-columns: 1fr; } }
-
-    /* ── Field rows ── */
-    .field-list { display: flex; flex-direction: column; gap: 0; }
+    /* ── Field rows inside cards ── */
+    .field-list { display: flex; flex-direction: column; }
     .field-row {
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-      padding: 9px 0;
-      border-bottom: 1px solid var(--border);
+      display: flex; align-items: baseline; gap: 12px;
+      padding: 9px 0; border-bottom: 1px solid var(--border);
     }
     .field-row:last-child { border-bottom: none; }
     .field-lbl {
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--muted);
-      min-width: 120px;
-      flex-shrink: 0;
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--muted);
+      min-width: 130px; flex-shrink: 0;
     }
-    .field-val {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--ink);
-    }
+    .field-val { font-size: 0.92rem; font-weight: 600; color: var(--ink); }
     .field-val.empty { color: var(--muted); font-weight: 400; font-style: italic; }
 
-    /* ── Image card ── */
-    .img-card {
-      background: linear-gradient(180deg, var(--card), #fffbf9);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 6px 18px var(--shadow);
-      margin-bottom: 20px;
+    /* ── Item name at top of card ── */
+    .item-title { font-size: 1.45rem; font-weight: 800; color: var(--ink); margin-bottom: 2px; }
+    .item-zh    { font-size: 0.95rem; color: var(--muted); margin-bottom: 14px; }
+    .item-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+
+    /* ── Photo ── */
+    .req-photo {
+      width: 100%; max-height: 340px; object-fit: contain;
+      border-radius: 10px; border: 1px solid var(--border);
+      background: #f6f4f0; cursor: zoom-in; display: block;
     }
-    .img-card img {
-      width: 100%;
-      max-height: 280px;
-      object-fit: contain;
-      background: #f6f4f0;
-      cursor: zoom-in;
-      display: block;
-    }
-    .img-no-photo {
-      width: 100%; height: 160px;
-      background: #f0ece8;
+    .no-photo {
+      height: 100px; background: #f0ece8;
       display: flex; align-items: center; justify-content: center;
       color: var(--muted); font-size: 0.85rem;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      margin-bottom: 20px;
+      border-radius: 10px; border: 1px solid var(--border);
     }
 
-    /* ── Status panel ── */
-    .status-bar {
-      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-      margin-bottom: 18px;
+    /* ── Requestor comment quote ── */
+    .req-comment-block {
+      background: #fdf8f5; border-left: 3px solid var(--accent-2);
+      border-radius: 0 8px 8px 0; padding: 10px 14px;
+      font-size: 0.9rem; color: var(--ink); line-height: 1.55;
     }
+
+    /* ── Status row ── */
+    .status-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .status-sel {
-      flex: 1; min-width: 130px;
-      padding: 9px 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      font-family: inherit;
-      font-size: 0.88rem;
-      background: var(--card);
-      color: var(--ink);
-      cursor: pointer;
-      outline: none;
-      transition: border-color 0.2s;
+      flex: 1; min-width: 140px; padding: 9px 12px;
+      border-radius: 8px; border: 1px solid var(--border);
+      font-family: inherit; font-size: 0.88rem;
+      background: var(--card); color: var(--ink); outline: none;
+      transition: border-color 0.2s; cursor: pointer;
     }
     .status-sel:focus { border-color: var(--accent); }
 
-    /* ── Checklist pills ── */
-    .ck-grid {
-      display: flex; flex-wrap: wrap; gap: 8px;
-      margin-bottom: 18px;
-    }
-    .ck-pill {
-      display: flex; align-items: center; gap: 6px;
-      background: var(--bg-1);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 5px 12px;
-      font-size: 0.8rem;
-      color: var(--ink);
-      cursor: pointer;
-      user-select: none;
-      transition: background 0.15s, border-color 0.15s, color 0.15s;
-    }
-    .ck-pill input[type="checkbox"] { accent-color: var(--success); width: 13px; height: 13px; cursor: pointer; }
-    .ck-pill.checked {
-      background: #dcfce7;
-      border-color: #86efac;
-      color: #166534;
-    }
-
-    /* ── Notes ── */
+    /* ── Purchaser notes ── */
     .notes-area {
-      width: 100%; min-height: 80px;
+      width: 100%; min-height: 110px;
       border: 1px solid var(--border); border-radius: 8px;
-      padding: 9px 12px; font-family: inherit; font-size: 0.88rem;
+      padding: 10px 14px; font-family: inherit; font-size: 0.9rem;
       color: var(--ink); background: var(--card);
       resize: vertical; box-sizing: border-box; outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      line-height: 1.5;
     }
-    .notes-area:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(192,57,43,0.08); }
+    .notes-area:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(192,57,43,0.09);
+    }
+
+    /* ── Timestamps ── */
+    .timestamps {
+      font-size: 0.75rem; color: var(--muted);
+      display: flex; gap: 20px; flex-wrap: wrap; margin-top: 16px;
+    }
+    .timestamps strong { color: var(--ink); }
 
     /* ── Save feedback ── */
-    .save-row { display: flex; gap: 10px; align-items: center; margin-top: 12px; }
-    .save-msg { font-size: 0.8rem; color: var(--success); opacity: 0; transition: opacity 0.4s; }
+    .save-row { display: flex; gap: 10px; align-items: center; margin-top: 14px; }
+    .save-msg  { font-size: 0.8rem; color: var(--success); opacity: 0; transition: opacity 0.4s; }
     .save-msg.show { opacity: 1; }
 
-    /* ── Section label inside card ── */
-    .section-lbl {
-      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.07em; color: var(--muted); margin-bottom: 8px;
-    }
-
-    /* ── Error ── */
     #errorMsg { color: var(--accent); text-align: center; padding: 40px; font-weight: 600; }
 
     /* ── Modal ── */
     .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.78);
+      position: fixed; inset: 0; background: rgba(0,0,0,0.78);
       display: none; align-items: center; justify-content: center;
       z-index: 9999; cursor: zoom-out;
     }
@@ -189,18 +103,6 @@
     .modal-overlay img {
       max-width: 92vw; max-height: 90vh;
       border-radius: 10px; box-shadow: 0 8px 40px rgba(0,0,0,0.5);
-    }
-
-    /* ── Comments block ── */
-    .comment-block {
-      background: #fdf8f5;
-      border-left: 3px solid var(--accent-2);
-      border-radius: 0 8px 8px 0;
-      padding: 10px 14px;
-      font-size: 0.88rem;
-      color: var(--ink);
-      line-height: 1.5;
-      margin-top: 4px;
     }
   </style>
 </head>
@@ -224,121 +126,99 @@
 <main>
   <a class="back-link" href="/requests">← Back to All Requests</a>
 
-  <div id="errorMsg" style="display:none;">Request not found.</div>
+  <div id="errorMsg" style="display:none;"></div>
 
-  <!-- Hero -->
-  <div class="hero-card" id="heroCard" style="display:none;">
-    <div class="hero-name" id="dItemEn">—</div>
-    <div class="hero-zh"   id="dItemZh"></div>
-    <div class="hero-badges">
-      <span id="dStatusBadge"></span>
-      <span id="dPriorityBadge"></span>
-      <span id="dCategoryBadge"></span>
-    </div>
-    <div class="hero-timestamps">
-      <span>Submitted: <strong id="dCreated">—</strong></span>
-      <span>Updated: <strong id="dUpdated">—</strong></span>
-    </div>
-  </div>
+  <div id="pageBody" style="display:none;">
 
-  <!-- Two-column body -->
-  <div class="detail-layout" id="mainLayout" style="display:none;">
-
-    <!-- LEFT column -->
-    <div>
-      <!-- Item Details -->
-      <div class="card">
-        <h2>📦 Item Details</h2>
-        <div class="field-list">
-          <div class="field-row">
-            <span class="field-lbl">Quantity</span>
-            <span class="field-val" id="dQuantity">—</span>
-          </div>
-          <div class="field-row">
-            <span class="field-lbl">Est. Price</span>
-            <span class="field-val" id="dPrice">—</span>
-          </div>
-          <div class="field-row">
-            <span class="field-lbl">Supplier</span>
-            <span class="field-val" id="dSupplier">—</span>
-          </div>
-          <div class="field-row">
-            <span class="field-lbl">Date Needed</span>
-            <span class="field-val" id="dDateNeeded">—</span>
-          </div>
+    <!-- Item -->
+    <div class="card">
+      <div class="item-title" id="dItemEn"></div>
+      <div class="item-zh"    id="dItemZh"></div>
+      <div class="item-badges">
+        <span id="dStatusBadge"></span>
+        <span id="dPriorityBadge"></span>
+        <span id="dCategoryBadge"></span>
+      </div>
+      <div class="field-list">
+        <div class="field-row">
+          <span class="field-lbl">Quantity</span>
+          <span class="field-val" id="dQuantity">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-lbl">Est. Price</span>
+          <span class="field-val" id="dPrice">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-lbl">Supplier</span>
+          <span class="field-val" id="dSupplier">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-lbl">Date Needed</span>
+          <span class="field-val" id="dDateNeeded">—</span>
         </div>
       </div>
-
-      <!-- Requestor -->
-      <div class="card">
-        <h2>👤 Requestor</h2>
-        <div class="field-list">
-          <div class="field-row">
-            <span class="field-lbl">Name</span>
-            <span class="field-val" id="dName">—</span>
-          </div>
-          <div class="field-row">
-            <span class="field-lbl">Department</span>
-            <span class="field-val" id="dDepartment">—</span>
-          </div>
-        </div>
-        <div id="commentWrap" style="display:none; margin-top:14px;">
-          <div class="section-lbl">Comments</div>
-          <div class="comment-block" id="dComments"></div>
-        </div>
+      <div class="timestamps">
+        <span>Submitted: <strong id="dCreated">—</strong></span>
+        <span>Updated: <strong id="dUpdated">—</strong></span>
       </div>
     </div>
 
-    <!-- RIGHT column -->
-    <div>
-      <!-- Image -->
-      <div class="img-card" id="cardImage" style="display:none;">
-        <img id="dImage" src="" alt="Item photo" title="Click to enlarge" onclick="openModal(this.src)"/>
+    <!-- Photo -->
+    <div class="card" id="cardPhoto">
+      <h2>🖼 Photo</h2>
+      <img class="req-photo" id="dImage" src="" alt="Item photo"
+           title="Click to enlarge" onclick="openModal(this.src)"/>
+    </div>
+
+    <!-- Requestor -->
+    <div class="card">
+      <h2>👤 Requestor</h2>
+      <div class="field-list">
+        <div class="field-row">
+          <span class="field-lbl">Name</span>
+          <span class="field-val" id="dName">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-lbl">Department</span>
+          <span class="field-val" id="dDepartment">—</span>
+        </div>
       </div>
-      <div class="img-no-photo" id="noPhoto">📷 No photo attached</div>
-
-      <!-- Purchaser Actions -->
-      <div class="card" id="cardStatus">
-        <h2>⚙️ Purchaser</h2>
-
-        <div class="section-lbl">Status</div>
-        <div class="status-bar">
-          <select class="status-sel" id="statusSelect">
-            <option value="Pending">Pending</option>
-            <option value="Done">Done</option>
-            <option value="Approved">Approved</option>
-            <option value="Ordered">Ordered</option>
-            <option value="Received">Received</option>
-            <option value="Cancelled">Cancelled</option>
-          </select>
-          <button class="btn btn-sm btn-primary" onclick="saveStatus()">Save</button>
-          <span class="save-msg" id="statusMsg">✓ Saved</span>
-        </div>
-
-        <div class="section-lbl">Checklist</div>
-        <div class="ck-grid">
-          <label class="ck-pill" id="pill_quoteObtained"><input type="checkbox" id="ck_quoteObtained" onchange="pillSync(this)"/> Quote</label>
-          <label class="ck-pill" id="pill_managerApproved"><input type="checkbox" id="ck_managerApproved" onchange="pillSync(this)"/> Approved</label>
-          <label class="ck-pill" id="pill_orderPlaced"><input type="checkbox" id="ck_orderPlaced" onchange="pillSync(this)"/> Ordered</label>
-          <label class="ck-pill" id="pill_paymentProcessed"><input type="checkbox" id="ck_paymentProcessed" onchange="pillSync(this)"/> Payment</label>
-          <label class="ck-pill" id="pill_itemReceived"><input type="checkbox" id="ck_itemReceived" onchange="pillSync(this)"/> Received</label>
-          <label class="ck-pill" id="pill_invoiceFiled"><input type="checkbox" id="ck_invoiceFiled" onchange="pillSync(this)"/> Invoice</label>
-        </div>
-
-        <div class="section-lbl">Notes</div>
-        <textarea class="notes-area" id="purchaserNotes" placeholder="Internal notes…"></textarea>
-
-        <div class="save-row">
-          <button class="btn btn-sm btn-success" onclick="saveChecklist()">💾 Save All</button>
-          <span class="save-msg" id="checklistMsg">✓ Saved</span>
-        </div>
+      <div id="commentWrap" style="display:none; margin-top:14px;">
+        <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-bottom:8px;">Comment</div>
+        <div class="req-comment-block" id="dComments"></div>
       </div>
     </div>
 
-  </div><!-- /detail-layout -->
+    <!-- Purchaser -->
+    <div class="card">
+      <h2>⚙️ Purchaser</h2>
+
+      <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-bottom:8px;">Status</div>
+      <div class="status-row" style="margin-bottom:20px;">
+        <select class="status-sel" id="statusSelect">
+          <option value="Pending">Pending</option>
+          <option value="Done">Done</option>
+          <option value="Approved">Approved</option>
+          <option value="Ordered">Ordered</option>
+          <option value="Received">Received</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+        <button class="btn btn-sm btn-primary" onclick="saveStatus()">Save</button>
+        <span class="save-msg" id="statusMsg">✓ Saved</span>
+      </div>
+
+      <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-bottom:8px;">Purchaser Notes</div>
+      <textarea class="notes-area" id="purchaserNotes" placeholder="Add internal notes, supplier contact, price quotes…"></textarea>
+
+      <div class="save-row">
+        <button class="btn btn-sm btn-success" onclick="saveNotes()">💾 Save Notes</button>
+        <span class="save-msg" id="notesMsg">✓ Saved</span>
+      </div>
+    </div>
+
+  </div><!-- /pageBody -->
 </main>
 
-<!-- Image modal -->
 <div class="modal-overlay" id="imgModal" onclick="this.classList.remove('open')">
   <img id="modalImg" src="" alt=""/>
 </div>
@@ -346,15 +226,12 @@
 <script>
   const id = location.pathname.split('/').pop();
 
-  const STATUS_CLASS = {
-    Pending:   'badge-pending',
-    Done:      'badge-received',
-    Approved:  'badge-approved',
-    Ordered:   'badge-ordered',
-    Received:  'badge-received',
-    Cancelled: 'badge-cancelled',
+  const STATUS_CLS = {
+    Pending: 'badge-pending', Done: 'badge-received',
+    Approved: 'badge-approved', Ordered: 'badge-ordered',
+    Received: 'badge-received', Cancelled: 'badge-cancelled',
   };
-  const PRIORITY_CLASS = {
+  const PRIORITY_CLS = {
     Low: 'badge-low', Medium: 'badge-medium', High: 'badge-high', Urgent: 'badge-urgent'
   };
 
@@ -365,28 +242,34 @@
         return res.json();
       });
 
-      // Page / header title
       document.title = `${r.itemNameEn} · Procurement`;
       document.getElementById('pageTitle').textContent = r.itemNameEn;
 
-      // Hero
+      // Item
       document.getElementById('dItemEn').textContent = r.itemNameEn;
       if (r.itemNameZh) document.getElementById('dItemZh').textContent = r.itemNameZh;
       document.getElementById('dStatusBadge').innerHTML =
-        `<span class="badge ${STATUS_CLASS[r.status] || 'badge-pending'}">${r.status || 'Pending'}</span>`;
+        `<span class="badge ${STATUS_CLS[r.status] || 'badge-pending'}">${r.status || 'Pending'}</span>`;
       document.getElementById('dPriorityBadge').innerHTML =
-        r.priority ? `<span class="badge ${PRIORITY_CLASS[r.priority] || ''}">${r.priority}</span>` : '';
+        r.priority ? `<span class="badge ${PRIORITY_CLS[r.priority] || ''}">${r.priority}</span>` : '';
       document.getElementById('dCategoryBadge').innerHTML =
-        r.category ? `<span class="badge badge-low" style="background:#f0e8e8;color:var(--muted)">${r.category}</span>` : '';
+        r.category ? `<span class="badge badge-pending" style="background:#f0ece8;color:var(--muted);border:1px solid var(--border)">${r.category}</span>` : '';
+
+      document.getElementById('dQuantity').textContent =
+        r.quantity ? r.quantity + (r.unit ? ' ' + r.unit : '') : '—';
+      setField('dPrice',      r.estimatedPrice);
+      setField('dSupplier',   r.supplier);
+      setField('dDateNeeded', r.dateNeeded);
       document.getElementById('dCreated').textContent = fmt(r.createdAt);
       document.getElementById('dUpdated').textContent = fmt(r.updatedAt);
 
-      // Item details
-      document.getElementById('dQuantity').textContent =
-        r.quantity ? r.quantity + (r.unit ? ' ' + r.unit : '') : '—';
-      setField('dPrice',     r.estimatedPrice);
-      setField('dSupplier',  r.supplier);
-      setField('dDateNeeded',r.dateNeeded);
+      // Photo
+      if (r.imagePath) {
+        document.getElementById('dImage').src = r.imagePath;
+        document.getElementById('cardPhoto').style.display = '';
+      } else {
+        document.getElementById('cardPhoto').style.display = 'none';
+      }
 
       // Requestor
       setField('dName',       r.requestorName);
@@ -396,50 +279,24 @@
         document.getElementById('commentWrap').style.display = '';
       }
 
-      // Image
-      if (r.imagePath) {
-        document.getElementById('dImage').src = r.imagePath;
-        document.getElementById('cardImage').style.display = '';
-        document.getElementById('noPhoto').style.display   = 'none';
-      }
+      // Purchaser
+      document.getElementById('statusSelect').value    = r.status || 'Pending';
+      document.getElementById('purchaserNotes').value  = r.purchaserNotes || '';
 
-      // Status
-      document.getElementById('statusSelect').value = r.status || 'Pending';
-
-      // Checklist
-      const ck = r.checklist || {};
-      ['quoteObtained','managerApproved','orderPlaced','paymentProcessed','itemReceived','invoiceFiled']
-        .forEach(key => {
-          const cb   = document.getElementById(`ck_${key}`);
-          const pill = document.getElementById(`pill_${key}`);
-          if (cb) { cb.checked = !!ck[key]; }
-          if (pill) pill.classList.toggle('checked', !!ck[key]);
-        });
-
-      // Purchaser notes
-      document.getElementById('purchaserNotes').value = r.purchaserNotes || '';
-
-      // Show layout
-      document.getElementById('heroCard').style.display   = '';
-      document.getElementById('mainLayout').style.display = '';
+      document.getElementById('pageBody').style.display = '';
 
     } catch (err) {
-      document.getElementById('errorMsg').style.display = '';
-      document.getElementById('errorMsg').textContent = 'Failed to load request: ' + err.message;
+      const el = document.getElementById('errorMsg');
+      el.style.display = '';
+      el.textContent = 'Failed to load request: ' + err.message;
     }
   }
 
-  function setField(id, val) {
-    const el = document.getElementById(id);
+  function setField(elId, val) {
+    const el = document.getElementById(elId);
     if (!el) return;
     if (val) { el.textContent = val; el.classList.remove('empty'); }
     else      { el.textContent = '—'; el.classList.add('empty'); }
-  }
-
-  function pillSync(cb) {
-    const key  = cb.id.replace('ck_', '');
-    const pill = document.getElementById(`pill_${key}`);
-    if (pill) pill.classList.toggle('checked', cb.checked);
   }
 
   async function saveStatus() {
@@ -450,28 +307,21 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
       });
-      // Update hero badge
       document.getElementById('dStatusBadge').innerHTML =
-        `<span class="badge ${STATUS_CLASS[status] || 'badge-pending'}">${status}</span>`;
+        `<span class="badge ${STATUS_CLS[status] || 'badge-pending'}">${status}</span>`;
       flash('statusMsg');
     } catch (err) { alert('Save failed: ' + err.message); }
   }
 
-  async function saveChecklist() {
-    const checklist = {};
-    ['quoteObtained','managerApproved','orderPlaced','paymentProcessed','itemReceived','invoiceFiled']
-      .forEach(key => {
-        const el = document.getElementById(`ck_${key}`);
-        if (el) checklist[key] = el.checked;
-      });
+  async function saveNotes() {
     const purchaserNotes = document.getElementById('purchaserNotes').value;
     try {
       await fetch(`/api/requests/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ checklist, purchaserNotes })
+        body: JSON.stringify({ purchaserNotes })
       });
-      flash('checklistMsg');
+      flash('notesMsg');
     } catch (err) { alert('Save failed: ' + err.message); }
   }
 
