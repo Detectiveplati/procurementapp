@@ -19,6 +19,18 @@ const mongoose = require('mongoose');
 const path     = require('path');
 const cors     = require('cors');
 const QRCode   = require('qrcode');
+const os       = require('os');
+
+// Auto-detect local network IP for QR code
+function getLocalIP() {
+    const nets = os.networkInterfaces();
+    for (const name of Object.keys(nets)) {
+        for (const net of nets[name]) {
+            if (net.family === 'IPv4' && !net.internal) return net.address;
+        }
+    }
+    return 'localhost';
+}
 
 const app  = express();
 const PORT = process.env.PORT || 3001;
@@ -54,7 +66,7 @@ app.use('/api/requests', requestsRouter);
 // QR code — points to the request form URL
 app.get('/api/qr', async (req, res) => {
     try {
-        const base = process.env.QR_BASE_URL || `http://localhost:${PORT}`;
+        const base = process.env.QR_BASE_URL || `http://${getLocalIP()}:${PORT}`;
         const url  = `${base}/request`;
         const png  = await QRCode.toBuffer(url, { width: 400, margin: 2 });
         res.setHeader('Content-Type', 'image/png');
@@ -89,5 +101,5 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`   📋 Request Form     → http://localhost:${PORT}/request`);
     console.log(`   📊 All Requests     → http://localhost:${PORT}/requests`);
     console.log(`   💚 Health Check     → http://localhost:${PORT}/api/health`);
-    console.log(`\n   Access from tablet: http://<your-ip>:${PORT}\n`);
+    console.log(`   📱 Scan QR at:       http://${getLocalIP()}:${PORT}/\n`);
 });
