@@ -74,6 +74,19 @@
       max-width: 480px;
     }
 
+    /* Done date stamp */
+    .done-date {
+      display: inline-block;
+      margin-top: 4px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--success);
+      background: rgba(39,174,96,0.10);
+      border: 1px solid rgba(39,174,96,0.25);
+      border-radius: 20px;
+      padding: 2px 10px;
+    }
+
     /* Right side */
     .req-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
     .req-date  { font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
@@ -195,9 +208,13 @@
         r.quantity      ? `Qty: ${escHtml(r.quantity)}` : '',
       ].filter(Boolean).join(' · ');
 
-      const submittedDate = new Date(r.createdAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short' });
-      const completedDate = r.completedAt ? new Date(r.completedAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short' }) : null;
-      const dateLabel = done && completedDate ? `✅ ${completedDate}` : submittedDate;
+      const submittedDate = new Date(r.createdAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+      const completedDate = r.completedAt
+        ? new Date(r.completedAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' })
+        : null;
+      const doneDateHtml = done && completedDate
+        ? `<div><span class="done-date">✅ Done: ${completedDate}</span></div>`
+        : '';
 
       return `
         <div class="req-row${done ? ' done' : ''}" id="card-${r._id}">
@@ -210,9 +227,10 @@
             <a class="req-name" href="/request/${r._id}">${escHtml(r.itemNameEn)}</a>
             <div class="req-meta"><span>${meta}</span></div>
             ${r.comments ? `<div class="req-comment">💬 ${escHtml(r.comments)}</div>` : ''}
+            <div id="done-date-${r._id}">${doneDateHtml}</div>
           </div>
           <div class="req-right">
-            <span class="req-date" id="date-${r._id}">${dateLabel}</span>
+            <span class="req-date">${submittedDate}</span>
             <span class="badge ${done ? 'badge-received' : 'badge-pending'}" id="badge-${r._id}">${done ? 'Done' : 'Pending'}</span>
             <button class="del-btn" onclick="deleteRequest('${r._id}')" title="Delete">🗑</button>
           </div>
@@ -229,18 +247,17 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
       }).then(r => r.json());
-      const card  = document.getElementById(`card-${id}`);
-      const badge = document.getElementById(`badge-${id}`);
-      const dateEl = document.getElementById(`date-${id}`);
+      const card     = document.getElementById(`card-${id}`);
+      const badge    = document.getElementById(`badge-${id}`);
+      const dateWrap = document.getElementById(`done-date-${id}`);
       if (card)  { card.className  = `req-row${checked ? ' done' : ''}`; }
       if (badge) { badge.className = `badge ${checked ? 'badge-received' : 'badge-pending'}`; badge.textContent = status; }
-      if (dateEl) {
+      if (dateWrap) {
         if (checked && updated.completedAt) {
-          const d = new Date(updated.completedAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short' });
-          dateEl.textContent = `✅ ${d}`;
+          const d = new Date(updated.completedAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+          dateWrap.innerHTML = `<div><span class="done-date">✅ Done: ${d}</span></div>`;
         } else {
-          const d = new Date(updated.createdAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short' });
-          dateEl.textContent = d;
+          dateWrap.innerHTML = '';
         }
       }
       updateStats(allRequests);
