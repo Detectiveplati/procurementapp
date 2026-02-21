@@ -6,149 +6,202 @@
   <title>Request Detail · Central Kitchen Procurement</title>
   <link rel="stylesheet" href="css/styles.css"/>
   <style>
-    .detail-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px 24px;
-    }
-    @media (max-width: 600px) { .detail-grid { grid-template-columns: 1fr; } }
-
-    .detail-field { display: flex; flex-direction: column; gap: 3px; }
-    .detail-label {
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--muted);
-    }
-    .detail-value {
-      font-size: 0.92rem;
-      color: var(--ink);
-      font-weight: 500;
-    }
-    .detail-value.large {
-      font-size: 1.2rem;
-      font-weight: 700;
-    }
-    .detail-value.zh {
-      font-size: 1rem;
-      color: var(--muted);
-      font-weight: 400;
-    }
-    .detail-value.empty { color: var(--muted); font-style: italic; font-weight: 400; }
-
-    /* Image */
-    .req-image {
-      width: 100%;
-      max-height: 320px;
-      object-fit: contain;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #f8f4f2;
-      cursor: pointer;
-    }
-
-    /* Status selector */
-    .status-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .status-select {
-      padding: 6px 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      font-family: inherit;
-      font-size: 0.88rem;
-      background: var(--card);
-      color: var(--ink);
-      cursor: pointer;
-    }
-    .save-status-btn {
-      padding: 6px 16px;
-      font-size: 0.82rem;
-    }
-
-    /* Checklist */
-    .checklist-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px 20px;
-    }
-    @media (max-width: 480px) { .checklist-grid { grid-template-columns: 1fr; } }
-
-    .check-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.85rem;
-      color: var(--ink);
-      cursor: pointer;
-    }
-    .check-item input[type="checkbox"] {
-      width: 16px; height: 16px;
-      accent-color: var(--success);
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-
-    /* Notes */
-    .notes-area {
-      width: 100%;
-      min-height: 80px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-family: inherit;
-      font-size: 0.88rem;
-      color: var(--ink);
-      background: var(--card);
-      resize: vertical;
-      box-sizing: border-box;
-    }
-
-    /* Priority / Category badges */
-    .badge-high   { background: #c0392b22; color: #c0392b; }
-    .badge-urgent { background: #e74c3c33; color: #c0392b; font-weight: 700; }
-    .badge-medium { background: #e6700022; color: #d35400; }
-    .badge-low    { background: #2ecc7122; color: #27ae60; }
-
-    /* Modal */
-    .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.75);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      cursor: zoom-out;
-    }
-    .modal-overlay.open { display: flex; }
-    .modal-overlay img {
-      max-width: 92vw;
-      max-height: 90vh;
-      border-radius: 10px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
-    }
-
+    /* ── Back link ── */
     .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.85rem;
-      color: var(--muted);
-      text-decoration: none;
-      margin-bottom: 12px;
-      transition: color 0.15s;
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.82rem; color: var(--muted); text-decoration: none;
+      margin-bottom: 14px; transition: color 0.15s;
     }
     .back-link:hover { color: var(--accent); }
 
-    .save-row { display: flex; gap: 10px; align-items: center; margin-top: 10px; }
-    .save-msg { font-size: 0.8rem; color: var(--success); opacity: 0; transition: opacity 0.3s; }
+    /* ── Hero card ── */
+    .hero-card {
+      background: linear-gradient(135deg, #fff 0%, #fff5f2 100%);
+      border: 1px solid var(--border);
+      border-left: 6px solid var(--accent);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 18px var(--shadow);
+    }
+    .hero-name {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--ink);
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+    .hero-zh {
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .hero-badges {
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    }
+    .hero-timestamps {
+      margin-top: 14px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex; gap: 20px; flex-wrap: wrap;
+    }
+    .hero-timestamps strong { color: var(--ink); }
+
+    /* ── Two-column layout ── */
+    .detail-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 800px) { .detail-layout { grid-template-columns: 1fr; } }
+
+    /* ── Field rows ── */
+    .field-list { display: flex; flex-direction: column; gap: 0; }
+    .field-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .field-row:last-child { border-bottom: none; }
+    .field-lbl {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      min-width: 120px;
+      flex-shrink: 0;
+    }
+    .field-val {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .field-val.empty { color: var(--muted); font-weight: 400; font-style: italic; }
+
+    /* ── Image card ── */
+    .img-card {
+      background: linear-gradient(180deg, var(--card), #fffbf9);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 6px 18px var(--shadow);
+      margin-bottom: 20px;
+    }
+    .img-card img {
+      width: 100%;
+      max-height: 280px;
+      object-fit: contain;
+      background: #f6f4f0;
+      cursor: zoom-in;
+      display: block;
+    }
+    .img-no-photo {
+      width: 100%; height: 160px;
+      background: #f0ece8;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted); font-size: 0.85rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    /* ── Status panel ── */
+    .status-bar {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+    .status-sel {
+      flex: 1; min-width: 130px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-family: inherit;
+      font-size: 0.88rem;
+      background: var(--card);
+      color: var(--ink);
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .status-sel:focus { border-color: var(--accent); }
+
+    /* ── Checklist pills ── */
+    .ck-grid {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-bottom: 18px;
+    }
+    .ck-pill {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 0.8rem;
+      color: var(--ink);
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .ck-pill input[type="checkbox"] { accent-color: var(--success); width: 13px; height: 13px; cursor: pointer; }
+    .ck-pill.checked {
+      background: #dcfce7;
+      border-color: #86efac;
+      color: #166534;
+    }
+
+    /* ── Notes ── */
+    .notes-area {
+      width: 100%; min-height: 80px;
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 9px 12px; font-family: inherit; font-size: 0.88rem;
+      color: var(--ink); background: var(--card);
+      resize: vertical; box-sizing: border-box; outline: none;
+      transition: border-color 0.2s;
+    }
+    .notes-area:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(192,57,43,0.08); }
+
+    /* ── Save feedback ── */
+    .save-row { display: flex; gap: 10px; align-items: center; margin-top: 12px; }
+    .save-msg { font-size: 0.8rem; color: var(--success); opacity: 0; transition: opacity 0.4s; }
     .save-msg.show { opacity: 1; }
 
-    #errorMsg { color: var(--accent); text-align: center; padding: 40px; }
+    /* ── Section label inside card ── */
+    .section-lbl {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.07em; color: var(--muted); margin-bottom: 8px;
+    }
+
+    /* ── Error ── */
+    #errorMsg { color: var(--accent); text-align: center; padding: 40px; font-weight: 600; }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.78);
+      display: none; align-items: center; justify-content: center;
+      z-index: 9999; cursor: zoom-out;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-overlay img {
+      max-width: 92vw; max-height: 90vh;
+      border-radius: 10px; box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    }
+
+    /* ── Comments block ── */
+    .comment-block {
+      background: #fdf8f5;
+      border-left: 3px solid var(--accent-2);
+      border-radius: 0 8px 8px 0;
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      color: var(--ink);
+      line-height: 1.5;
+      margin-top: 4px;
+    }
   </style>
 </head>
 <body>
@@ -173,113 +226,116 @@
 
   <div id="errorMsg" style="display:none;">Request not found.</div>
 
-  <!-- Item Info -->
-  <div class="card" id="cardItem" style="display:none;">
-    <h2>📦 Item Details</h2>
-    <div style="margin-bottom:16px;">
-      <div class="detail-value large" id="dItemEn">—</div>
-      <div class="detail-value zh"    id="dItemZh"></div>
+  <!-- Hero -->
+  <div class="hero-card" id="heroCard" style="display:none;">
+    <div class="hero-name" id="dItemEn">—</div>
+    <div class="hero-zh"   id="dItemZh"></div>
+    <div class="hero-badges">
+      <span id="dStatusBadge"></span>
+      <span id="dPriorityBadge"></span>
+      <span id="dCategoryBadge"></span>
     </div>
-    <div class="detail-grid">
-      <div class="detail-field">
-        <span class="detail-label">Category</span>
-        <span class="detail-value" id="dCategory">—</span>
-      </div>
-      <div class="detail-field">
-        <span class="detail-label">Quantity</span>
-        <span class="detail-value" id="dQuantity">—</span>
-      </div>
-      <div class="detail-field">
-        <span class="detail-label">Estimated Price</span>
-        <span class="detail-value" id="dPrice">—</span>
-      </div>
-      <div class="detail-field">
-        <span class="detail-label">Supplier</span>
-        <span class="detail-value" id="dSupplier">—</span>
-      </div>
-      <div class="detail-field">
-        <span class="detail-label">Priority</span>
-        <span class="detail-value" id="dPriority">—</span>
-      </div>
-      <div class="detail-field">
-        <span class="detail-label">Date Needed</span>
-        <span class="detail-value" id="dDateNeeded">—</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Image -->
-  <div class="card" id="cardImage" style="display:none;">
-    <h2>🖼 Photo</h2>
-    <img class="req-image" id="dImage" src="" alt="Item photo"
-         onclick="openModal(this.src)" title="Click to enlarge"/>
-  </div>
-
-  <!-- Requestor -->
-  <div class="card" id="cardRequestor" style="display:none;">
-    <h2>👤 Requestor</h2>
-    <div class="detail-grid">
-      <div class="detail-field">
-        <span class="detail-label">Name</span>
-        <span class="detail-value" id="dName">—</span>
-      </div>
-      <div class="detail-field">
-        <span class="detail-label">Department</span>
-        <span class="detail-value" id="dDepartment">—</span>
-      </div>
-    </div>
-    <div class="detail-field" style="margin-top:12px;" id="commentBlock">
-      <span class="detail-label">Comments</span>
-      <span class="detail-value" id="dComments">—</span>
-    </div>
-    <div style="display:flex; gap:20px; margin-top:14px; font-size:0.75rem; color:var(--muted);">
+    <div class="hero-timestamps">
       <span>Submitted: <strong id="dCreated">—</strong></span>
       <span>Updated: <strong id="dUpdated">—</strong></span>
     </div>
   </div>
 
-  <!-- Status & Purchaser Tools -->
-  <div class="card" id="cardStatus" style="display:none;">
-    <h2>⚙️ Purchaser Actions</h2>
+  <!-- Two-column body -->
+  <div class="detail-layout" id="mainLayout" style="display:none;">
 
-    <div class="detail-field" style="margin-bottom:16px;">
-      <span class="detail-label">Status</span>
-      <div class="status-row">
-        <select class="status-select" id="statusSelect">
-          <option value="Pending">Pending</option>
-          <option value="Done">Done</option>
-          <option value="Approved">Approved</option>
-          <option value="Ordered">Ordered</option>
-          <option value="Received">Received</option>
-          <option value="Cancelled">Cancelled</option>
-        </select>
-        <button class="btn btn-sm save-status-btn" onclick="saveStatus()">Save Status</button>
-        <span class="save-msg" id="statusMsg">✓ Saved</span>
+    <!-- LEFT column -->
+    <div>
+      <!-- Item Details -->
+      <div class="card">
+        <h2>📦 Item Details</h2>
+        <div class="field-list">
+          <div class="field-row">
+            <span class="field-lbl">Quantity</span>
+            <span class="field-val" id="dQuantity">—</span>
+          </div>
+          <div class="field-row">
+            <span class="field-lbl">Est. Price</span>
+            <span class="field-val" id="dPrice">—</span>
+          </div>
+          <div class="field-row">
+            <span class="field-lbl">Supplier</span>
+            <span class="field-val" id="dSupplier">—</span>
+          </div>
+          <div class="field-row">
+            <span class="field-lbl">Date Needed</span>
+            <span class="field-val" id="dDateNeeded">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Requestor -->
+      <div class="card">
+        <h2>👤 Requestor</h2>
+        <div class="field-list">
+          <div class="field-row">
+            <span class="field-lbl">Name</span>
+            <span class="field-val" id="dName">—</span>
+          </div>
+          <div class="field-row">
+            <span class="field-lbl">Department</span>
+            <span class="field-val" id="dDepartment">—</span>
+          </div>
+        </div>
+        <div id="commentWrap" style="display:none; margin-top:14px;">
+          <div class="section-lbl">Comments</div>
+          <div class="comment-block" id="dComments"></div>
+        </div>
       </div>
     </div>
 
-    <div class="detail-field" style="margin-bottom:16px;">
-      <span class="detail-label" style="margin-bottom:8px;">Checklist</span>
-      <div class="checklist-grid" id="checklistGrid">
-        <label class="check-item"><input type="checkbox" id="ck_quoteObtained"/>     Quote Obtained</label>
-        <label class="check-item"><input type="checkbox" id="ck_managerApproved"/>   Manager Approved</label>
-        <label class="check-item"><input type="checkbox" id="ck_orderPlaced"/>       Order Placed</label>
-        <label class="check-item"><input type="checkbox" id="ck_paymentProcessed"/>  Payment Processed</label>
-        <label class="check-item"><input type="checkbox" id="ck_itemReceived"/>      Item Received</label>
-        <label class="check-item"><input type="checkbox" id="ck_invoiceFiled"/>      Invoice Filed</label>
+    <!-- RIGHT column -->
+    <div>
+      <!-- Image -->
+      <div class="img-card" id="cardImage" style="display:none;">
+        <img id="dImage" src="" alt="Item photo" title="Click to enlarge" onclick="openModal(this.src)"/>
+      </div>
+      <div class="img-no-photo" id="noPhoto">📷 No photo attached</div>
+
+      <!-- Purchaser Actions -->
+      <div class="card" id="cardStatus">
+        <h2>⚙️ Purchaser</h2>
+
+        <div class="section-lbl">Status</div>
+        <div class="status-bar">
+          <select class="status-sel" id="statusSelect">
+            <option value="Pending">Pending</option>
+            <option value="Done">Done</option>
+            <option value="Approved">Approved</option>
+            <option value="Ordered">Ordered</option>
+            <option value="Received">Received</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+          <button class="btn btn-sm btn-primary" onclick="saveStatus()">Save</button>
+          <span class="save-msg" id="statusMsg">✓ Saved</span>
+        </div>
+
+        <div class="section-lbl">Checklist</div>
+        <div class="ck-grid">
+          <label class="ck-pill" id="pill_quoteObtained"><input type="checkbox" id="ck_quoteObtained" onchange="pillSync(this)"/> Quote</label>
+          <label class="ck-pill" id="pill_managerApproved"><input type="checkbox" id="ck_managerApproved" onchange="pillSync(this)"/> Approved</label>
+          <label class="ck-pill" id="pill_orderPlaced"><input type="checkbox" id="ck_orderPlaced" onchange="pillSync(this)"/> Ordered</label>
+          <label class="ck-pill" id="pill_paymentProcessed"><input type="checkbox" id="ck_paymentProcessed" onchange="pillSync(this)"/> Payment</label>
+          <label class="ck-pill" id="pill_itemReceived"><input type="checkbox" id="ck_itemReceived" onchange="pillSync(this)"/> Received</label>
+          <label class="ck-pill" id="pill_invoiceFiled"><input type="checkbox" id="ck_invoiceFiled" onchange="pillSync(this)"/> Invoice</label>
+        </div>
+
+        <div class="section-lbl">Notes</div>
+        <textarea class="notes-area" id="purchaserNotes" placeholder="Internal notes…"></textarea>
+
+        <div class="save-row">
+          <button class="btn btn-sm btn-success" onclick="saveChecklist()">💾 Save All</button>
+          <span class="save-msg" id="checklistMsg">✓ Saved</span>
+        </div>
       </div>
     </div>
 
-    <div class="detail-field">
-      <span class="detail-label" style="margin-bottom:6px;">Purchaser Notes</span>
-      <textarea class="notes-area" id="purchaserNotes" placeholder="Internal notes…"></textarea>
-    </div>
-
-    <div class="save-row">
-      <button class="btn btn-sm" onclick="saveChecklist()">💾 Save Checklist & Notes</button>
-      <span class="save-msg" id="checklistMsg">✓ Saved</span>
-    </div>
-  </div>
+  </div><!-- /detail-layout -->
 </main>
 
 <!-- Image modal -->
@@ -290,6 +346,18 @@
 <script>
   const id = location.pathname.split('/').pop();
 
+  const STATUS_CLASS = {
+    Pending:   'badge-pending',
+    Done:      'badge-received',
+    Approved:  'badge-approved',
+    Ordered:   'badge-ordered',
+    Received:  'badge-received',
+    Cancelled: 'badge-cancelled',
+  };
+  const PRIORITY_CLASS = {
+    Low: 'badge-low', Medium: 'badge-medium', High: 'badge-high', Urgent: 'badge-urgent'
+  };
+
   async function loadRequest() {
     try {
       const r = await fetch(`/api/requests/${id}`).then(res => {
@@ -297,39 +365,43 @@
         return res.json();
       });
 
-      // Page title
+      // Page / header title
       document.title = `${r.itemNameEn} · Procurement`;
       document.getElementById('pageTitle').textContent = r.itemNameEn;
 
-      // Item details
+      // Hero
       document.getElementById('dItemEn').textContent = r.itemNameEn;
       if (r.itemNameZh) document.getElementById('dItemZh').textContent = r.itemNameZh;
-      document.getElementById('dCategory').textContent  = r.category  || '—';
-      document.getElementById('dQuantity').textContent  = r.quantity
-        ? r.quantity + (r.unit ? ' ' + r.unit : '')
-        : '—';
-      document.getElementById('dPrice').textContent     = r.estimatedPrice || empty();
-      document.getElementById('dSupplier').textContent  = r.supplier  || empty();
-      document.getElementById('dDateNeeded').textContent= r.dateNeeded || empty();
+      document.getElementById('dStatusBadge').innerHTML =
+        `<span class="badge ${STATUS_CLASS[r.status] || 'badge-pending'}">${r.status || 'Pending'}</span>`;
+      document.getElementById('dPriorityBadge').innerHTML =
+        r.priority ? `<span class="badge ${PRIORITY_CLASS[r.priority] || ''}">${r.priority}</span>` : '';
+      document.getElementById('dCategoryBadge').innerHTML =
+        r.category ? `<span class="badge badge-low" style="background:#f0e8e8;color:var(--muted)">${r.category}</span>` : '';
+      document.getElementById('dCreated').textContent = fmt(r.createdAt);
+      document.getElementById('dUpdated').textContent = fmt(r.updatedAt);
 
-      // Priority badge
-      const pEl = document.getElementById('dPriority');
-      if (r.priority) {
-        pEl.innerHTML = `<span class="badge badge-${r.priority.toLowerCase()}">${r.priority}</span>`;
-      } else { pEl.textContent = '—'; }
+      // Item details
+      document.getElementById('dQuantity').textContent =
+        r.quantity ? r.quantity + (r.unit ? ' ' + r.unit : '') : '—';
+      setField('dPrice',     r.estimatedPrice);
+      setField('dSupplier',  r.supplier);
+      setField('dDateNeeded',r.dateNeeded);
+
+      // Requestor
+      setField('dName',       r.requestorName);
+      setField('dDepartment', r.department);
+      if (r.comments) {
+        document.getElementById('dComments').textContent = r.comments;
+        document.getElementById('commentWrap').style.display = '';
+      }
 
       // Image
       if (r.imagePath) {
         document.getElementById('dImage').src = r.imagePath;
         document.getElementById('cardImage').style.display = '';
+        document.getElementById('noPhoto').style.display   = 'none';
       }
-
-      // Requestor
-      document.getElementById('dName').textContent       = r.requestorName || '—';
-      document.getElementById('dDepartment').textContent = r.department     || empty();
-      document.getElementById('dComments').textContent   = r.comments       || empty();
-      document.getElementById('dCreated').textContent    = fmt(r.createdAt);
-      document.getElementById('dUpdated').textContent    = fmt(r.updatedAt);
 
       // Status
       document.getElementById('statusSelect').value = r.status || 'Pending';
@@ -338,22 +410,36 @@
       const ck = r.checklist || {};
       ['quoteObtained','managerApproved','orderPlaced','paymentProcessed','itemReceived','invoiceFiled']
         .forEach(key => {
-          const el = document.getElementById(`ck_${key}`);
-          if (el) el.checked = !!ck[key];
+          const cb   = document.getElementById(`ck_${key}`);
+          const pill = document.getElementById(`pill_${key}`);
+          if (cb) { cb.checked = !!ck[key]; }
+          if (pill) pill.classList.toggle('checked', !!ck[key]);
         });
 
       // Purchaser notes
       document.getElementById('purchaserNotes').value = r.purchaserNotes || '';
 
-      // Show cards
-      ['cardItem','cardRequestor','cardStatus'].forEach(id =>
-        document.getElementById(id).style.display = ''
-      );
+      // Show layout
+      document.getElementById('heroCard').style.display   = '';
+      document.getElementById('mainLayout').style.display = '';
 
     } catch (err) {
       document.getElementById('errorMsg').style.display = '';
       document.getElementById('errorMsg').textContent = 'Failed to load request: ' + err.message;
     }
+  }
+
+  function setField(id, val) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (val) { el.textContent = val; el.classList.remove('empty'); }
+    else      { el.textContent = '—'; el.classList.add('empty'); }
+  }
+
+  function pillSync(cb) {
+    const key  = cb.id.replace('ck_', '');
+    const pill = document.getElementById(`pill_${key}`);
+    if (pill) pill.classList.toggle('checked', cb.checked);
   }
 
   async function saveStatus() {
@@ -364,6 +450,9 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
       });
+      // Update hero badge
+      document.getElementById('dStatusBadge').innerHTML =
+        `<span class="badge ${STATUS_CLASS[status] || 'badge-pending'}">${status}</span>`;
       flash('statusMsg');
     } catch (err) { alert('Save failed: ' + err.message); }
   }
@@ -399,10 +488,6 @@
       day: '2-digit', month: 'short', year: 'numeric',
       hour: '2-digit', minute: '2-digit'
     });
-  }
-
-  function empty() {
-    return '—';
   }
 
   function openModal(src) {
