@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>New Procurement Request 采购申请</title>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+
+<header>
+  <h1>🛒 Procurement Request 采购申请</h1>
+  <nav class="nav-links">
+    <a href="/">🏠 Home</a>
+    <a href="/requests">📊 All Requests</a>
+  </nav>
+</header>
+
+<main>
+  <div id="msgSuccess" class="msg success">✅ Request submitted successfully! 申请提交成功！</div>
+  <div id="msgError"   class="msg error">❌ Failed to submit. Please try again.</div>
+
+  <form id="requestForm" enctype="multipart/form-data">
+
+    <!-- Item Details -->
+    <div class="card">
+      <h2>📦 Item Details 物品详情</h2>
+      <div class="form-row">
+        <div class="form-group" style="flex:2;">
+          <label>Item Name (English) *</label>
+          <input type="text" name="itemNameEn" placeholder="e.g. Commercial Blender" required/>
+        </div>
+        <div class="form-group" style="flex:2;">
+          <label>物品名称 (中文)</label>
+          <input type="text" name="itemNameZh" placeholder="例：商用搅拌机"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category 类别</label>
+          <select name="category">
+            <option value="Equipment">Equipment 设备</option>
+            <option value="Ingredient">Ingredient 食材</option>
+            <option value="Consumable">Consumable 耗材</option>
+            <option value="Cleaning">Cleaning 清洁用品</option>
+            <option value="Other">Other 其他</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Priority 优先级</label>
+          <select name="priority">
+            <option value="Low">Low 低</option>
+            <option value="Medium" selected>Medium 中</option>
+            <option value="High">High 高</option>
+            <option value="Urgent">🔴 Urgent 紧急</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Quantity 数量</label>
+          <input type="text" name="quantity" placeholder="e.g. 2"/>
+        </div>
+        <div class="form-group">
+          <label>Unit 单位</label>
+          <input type="text" name="unit" placeholder="e.g. pcs, kg, box"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Estimated Price 预估价格 (RM)</label>
+          <input type="text" name="estimatedPrice" placeholder="e.g. 350.00"/>
+        </div>
+        <div class="form-group">
+          <label>Suggested Supplier 建议供应商</label>
+          <input type="text" name="supplier" placeholder="Optional 可选"/>
+        </div>
+        <div class="form-group">
+          <label>Date Needed By 需要日期</label>
+          <input type="date" name="dateNeeded"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Requestor Info -->
+    <div class="card">
+      <h2>👤 Requestor Info 申请人信息</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Name 姓名 *</label>
+          <input type="text" name="requestorName" placeholder="Full name 全名" required/>
+        </div>
+        <div class="form-group">
+          <label>Department 部门</label>
+          <input type="text" name="department" placeholder="e.g. Pastry, Wok Station"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="flex:1;">
+          <label>Comments / Reason 备注 / 原因</label>
+          <textarea name="comments" placeholder="Why is this item needed? Any special notes? 为什么需要此物品？有特别说明吗？"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Image Upload -->
+    <div class="card">
+      <h2>📷 Photo 照片 <span style="font-weight:400;font-size:0.85rem;color:var(--muted)">(optional 可选, max 5MB)</span></h2>
+      <div class="form-group">
+        <label>Upload image of item or reference 上传物品图片或参考图</label>
+        <input type="file" name="image" id="imageInput" accept="image/*"/>
+        <span class="hint">Snap a photo of the broken/needed item or a product reference.</span>
+        <img id="imagePreview" alt="Preview"/>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <button type="submit" class="btn btn-primary">✅ Submit Request 提交申请</button>
+      <a href="/" class="btn btn-outline">Cancel 取消</a>
+    </div>
+  </form>
+</main>
+
+<script>
+  // Image preview
+  document.getElementById('imageInput').addEventListener('change', function () {
+    const file = this.files[0];
+    const preview = document.getElementById('imagePreview');
+    if (file) {
+      preview.src = URL.createObjectURL(file);
+      preview.style.display = 'block';
+    } else {
+      preview.style.display = 'none';
+    }
+  });
+
+  // Form submit
+  document.getElementById('requestForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const msgOk  = document.getElementById('msgSuccess');
+    const msgErr = document.getElementById('msgError');
+    msgOk.style.display = 'none';
+    msgErr.style.display = 'none';
+
+    const formData = new FormData(this);
+
+    try {
+      const res = await fetch('/api/requests', { method: 'POST', body: formData });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Server error');
+      }
+      msgOk.style.display = 'block';
+      this.reset();
+      document.getElementById('imagePreview').style.display = 'none';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (err) {
+      msgErr.textContent = `❌ ${err.message}`;
+      msgErr.style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  });
+</script>
+</body>
+</html>

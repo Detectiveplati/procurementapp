@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>All Requests 所有采购申请</title>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body>
+
+<header>
+  <h1>📊 All Requests 所有申请</h1>
+  <nav class="nav-links">
+    <a href="/">🏠 Home</a>
+    <a href="/request">+ New Request</a>
+  </nav>
+</header>
+
+<main>
+  <!-- Stats -->
+  <div class="stats-bar" id="statsBar">
+    <div class="stat-box"><div class="num" id="statTotal">—</div><div class="lbl">Total</div></div>
+    <div class="stat-box"><div class="num" id="statPending">—</div><div class="lbl">Pending</div></div>
+    <div class="stat-box"><div class="num" id="statApproved">—</div><div class="lbl">Approved</div></div>
+    <div class="stat-box"><div class="num" id="statOrdered">—</div><div class="lbl">Ordered</div></div>
+    <div class="stat-box"><div class="num" id="statReceived">—</div><div class="lbl">Received</div></div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <input type="text" id="searchInput" placeholder="🔍 Search item / requestor..."/>
+    <select id="filterStatus">
+      <option value="">All Statuses</option>
+      <option value="Pending">Pending</option>
+      <option value="Approved">Approved</option>
+      <option value="Ordered">Ordered</option>
+      <option value="Received">Received</option>
+      <option value="Cancelled">Cancelled</option>
+    </select>
+    <select id="filterPriority">
+      <option value="">All Priorities</option>
+      <option value="Urgent">🔴 Urgent</option>
+      <option value="High">High</option>
+      <option value="Medium">Medium</option>
+      <option value="Low">Low</option>
+    </select>
+    <select id="filterCategory">
+      <option value="">All Categories</option>
+      <option value="Equipment">Equipment</option>
+      <option value="Ingredient">Ingredient</option>
+      <option value="Consumable">Consumable</option>
+      <option value="Cleaning">Cleaning</option>
+      <option value="Other">Other</option>
+    </select>
+    <button class="btn btn-outline btn-sm" onclick="loadRequests()">🔄 Refresh</button>
+  </div>
+
+  <div id="requestsList"><p style="color:var(--muted);text-align:center;padding:40px;">Loading…</p></div>
+</main>
+
+<!-- Image modal -->
+<div class="modal-overlay" id="imgModal" onclick="this.classList.remove('open')">
+  <img id="modalImg" src="" alt=""/>
+</div>
+
+<script>
+  const CHECKLIST_LABELS = {
+    quoteObtained:    'Quote Obtained 已取报价',
+    managerApproved:  'Manager Approved 主管批准',
+    orderPlaced:      'Order Placed 已下单',
+    paymentProcessed: 'Payment Processed 已付款',
+    itemReceived:     'Item Received 已收货',
+    invoiceFiled:     'Invoice Filed 发票存档'
+  };
+
+  const PRIORITY_BADGE = { Low: 'badge-low', Medium: 'badge-medium', High: 'badge-high', Urgent: 'badge-urgent' };
+  const STATUS_BADGE   = { Pending: 'badge-pending', Approved: 'badge-approved', Ordered: 'badge-ordered', Received: 'badge-received', Cancelled: 'badge-cancelled' };
+
+  let allRequests = [];
+
+  async function loadRequests() {
+    const qs = [];
+    const search   = document.getElementById('searchInput').value.trim();
+    const status   = document.getElementById('filterStatus').value;
+    const priority = document.getElementById('filterPriority').value;
+    const category = document.getElementById('filterCategory').value;
+    if (search)   qs.push(`search=${encodeURIComponent(search)}`);
+    if (status)   qs.push(`status=${encodeURIComponent(status)}`);
+    if (priority) qs.push(`priority=${encodeURIComponent(priority)}`);
+    if (category) qs.push(`category=${encodeURIComponent(category)}`);
+
+    try {
+      const data = await fetch(`/api/requests${qs.length ? '?' + qs.join('&') : ''}`).then(r => r.json());
+      allRequests = data;
+      renderRequests(data);
+      updateStats(data);
+    } catch (err) {
+      document.getElementById('requestsList').innerHTML = `<p style="color:red">Failed to load: ${err.message}</p>`;
+    }
+  }
+
+  function updateStats(data) {
+    document.getElementById('statTotal').textContent    = data.length;
+    document.getElementById('statPending').textContent  = data.filter(r => r.status === 'Pending').length;
+    document.getElementById('statApproved').textContent = data.filter(r => r.status === 'Approved').length;
+    document.getElementById('statOrdered').textContent  = data.filter(r => r.status === 'Ordered').length;
+    document.getElementById('statReceived').textContent = data.filter(r => r.status === 'Received').length;
+  }
+
+  function renderRequests(requests) {
+    const container = document.getElementById('requestsList');
+    if (!requests.length) {
+      container.innerHTML = '<p style="color:var(--muted);text-align:center;padding:40px;">No requests found.</p>';
+      return;
+    }
+
+    container.innerHTML = requests.map(r => {
+      const cl = r.checklist || {};
+      const checklistHTML = Object.entries(CHECKLIST_LABELS).map(([key, label]) => `
+        <label class="${cl[key] ? 'checked' : ''}" id="cl-label-${r._id}-${key}">
+          <input type="checkbox" ${cl[key] ? 'checked' : ''}
+            onchange="updateChecklist('${r._id}', '${key}', this.checked)"/>
+          ${label}
+        </label>
+      `).join('');
+
+      const imgHTML = r.imagePath
+        ? `<img class="request-image" src="${r.imagePath}" alt="item" onclick="openModal('${r.imagePath}')" title="Click to enlarge"/>`
+        : '';
+
+      return `
+        <div class="request-card status-${r.status.toLowerCase()}" id="card-${r._id}">
+          <div class="request-header">
+            <div class="request-title">
+              <strong>${escHtml(r.itemNameEn)}</strong>
+              ${r.itemNameZh ? `<span class="zh">${escHtml(r.itemNameZh)}</span>` : ''}
+              <div class="request-meta">
+                <span class="badge ${PRIORITY_BADGE[r.priority] || ''}">${r.priority}</span>
+                <span class="badge ${STATUS_BADGE[r.status] || ''}">${r.status}</span>
+                <span>${r.category}</span>
+                ${r.quantity ? `<span>Qty: ${escHtml(r.quantity)}${r.unit ? ' ' + escHtml(r.unit) : ''}</span>` : ''}
+                ${r.estimatedPrice ? `<span>RM ${escHtml(r.estimatedPrice)}</span>` : ''}
+                ${r.dateNeeded ? `<span>Needed: ${r.dateNeeded}</span>` : ''}
+              </div>
+              <div class="request-meta" style="margin-top:4px;">
+                <span>👤 ${escHtml(r.requestorName)}</span>
+                ${r.department ? `<span>🏢 ${escHtml(r.department)}</span>` : ''}
+                ${r.supplier ? `<span>🏭 ${escHtml(r.supplier)}</span>` : ''}
+                <span style="margin-left:4px;opacity:0.6;">${new Date(r.createdAt).toLocaleDateString()}</span>
+              </div>
+              ${r.comments ? `<div style="margin-top:6px;font-size:0.85rem;color:var(--muted);">💬 ${escHtml(r.comments)}</div>` : ''}
+            </div>
+            ${imgHTML}
+          </div>
+
+          <!-- Purchaser checklist -->
+          <details style="margin-top:12px;">
+            <summary style="cursor:pointer;font-size:0.85rem;font-weight:600;color:var(--primary);user-select:none;">
+              ☑ Purchaser Checklist 采购核对 (${Object.values(cl).filter(Boolean).length}/${Object.keys(CHECKLIST_LABELS).length})
+            </summary>
+            <div class="checklist" id="cl-${r._id}">${checklistHTML}</div>
+
+            <!-- Purchaser notes -->
+            <div style="margin-top:10px;display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;">
+              <textarea id="notes-${r._id}" style="flex:1;min-width:200px;font-size:0.83rem;padding:6px 10px;border:1px solid var(--border);border-radius:6px;resize:vertical;" rows="2"
+                placeholder="Purchaser notes... 采购备注...">${escHtml(r.purchaserNotes || '')}</textarea>
+              <button class="btn btn-outline btn-sm" onclick="saveNotes('${r._id}')">💾 Save</button>
+            </div>
+          </details>
+
+          <!-- Status row -->
+          <div class="status-row">
+            <label style="font-size:0.82rem;font-weight:600;color:var(--muted);">Status 状态:</label>
+            <select onchange="updateStatus('${r._id}', this.value)">
+              ${['Pending','Approved','Ordered','Received','Cancelled'].map(s =>
+                `<option value="${s}" ${r.status === s ? 'selected' : ''}>${s}</option>`
+              ).join('')}
+            </select>
+            <button class="btn btn-danger btn-sm" onclick="deleteRequest('${r._id}')">🗑 Delete</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  async function updateChecklist(id, key, value) {
+    try {
+      await fetch(`/api/requests/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ [`checklist.${key}`]: value })
+      });
+      // Update label class
+      const lbl = document.getElementById(`cl-label-${id}-${key}`);
+      if (lbl) lbl.className = value ? 'checked' : '';
+      // Refresh summary count
+      const card = document.getElementById(`card-${id}`);
+      if (card) {
+        const checked = card.querySelectorAll('.checklist input:checked').length;
+        const total   = Object.keys(CHECKLIST_LABELS).length;
+        const summary = card.querySelector('details summary');
+        if (summary) summary.textContent = `☑ Purchaser Checklist 采购核对 (${checked}/${total})`;
+      }
+    } catch (err) { alert('Update failed: ' + err.message); }
+  }
+
+  async function updateStatus(id, status) {
+    try {
+      await fetch(`/api/requests/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      // Update card class
+      const card = document.getElementById(`card-${id}`);
+      if (card) {
+        card.className = `request-card status-${status.toLowerCase()}`;
+        // Update status badge
+        const badge = card.querySelector('.badge.badge-pending, .badge.badge-approved, .badge.badge-ordered, .badge.badge-received, .badge.badge-cancelled');
+        if (badge) { badge.className = `badge ${{'Pending':'badge-pending','Approved':'badge-approved','Ordered':'badge-ordered','Received':'badge-received','Cancelled':'badge-cancelled'}[status]}`; badge.textContent = status; }
+      }
+      loadRequests(); // full refresh for stats
+    } catch (err) { alert('Status update failed: ' + err.message); }
+  }
+
+  async function saveNotes(id) {
+    const notes = document.getElementById(`notes-${id}`).value;
+    try {
+      await fetch(`/api/requests/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ purchaserNotes: notes })
+      });
+    } catch (err) { alert('Save failed: ' + err.message); }
+  }
+
+  async function deleteRequest(id) {
+    if (!confirm('Delete this request? This cannot be undone.\n确定删除此申请？')) return;
+    try {
+      await fetch(`/api/requests/${id}`, { method: 'DELETE' });
+      document.getElementById(`card-${id}`)?.remove();
+      loadRequests();
+    } catch (err) { alert('Delete failed: ' + err.message); }
+  }
+
+  function openModal(src) {
+    document.getElementById('modalImg').src = src;
+    document.getElementById('imgModal').classList.add('open');
+  }
+
+  function escHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // Filter listeners (debounced search)
+  let searchTimer;
+  document.getElementById('searchInput').addEventListener('input', () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(loadRequests, 350);
+  });
+  document.getElementById('filterStatus').addEventListener('change', loadRequests);
+  document.getElementById('filterPriority').addEventListener('change', loadRequests);
+  document.getElementById('filterCategory').addEventListener('change', loadRequests);
+
+  // Initial load
+  loadRequests();
+</script>
+</body>
+</html>
