@@ -195,7 +195,9 @@
         r.quantity      ? `Qty: ${escHtml(r.quantity)}` : '',
       ].filter(Boolean).join(' · ');
 
-      const date = new Date(r.createdAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short' });
+      const submittedDate = new Date(r.createdAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short' });
+      const completedDate = r.completedAt ? new Date(r.completedAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short' }) : null;
+      const dateLabel = done && completedDate ? `✅ ${completedDate}` : submittedDate;
 
       return `
         <div class="req-row${done ? ' done' : ''}" id="card-${r._id}">
@@ -210,7 +212,7 @@
             ${r.comments ? `<div class="req-comment">💬 ${escHtml(r.comments)}</div>` : ''}
           </div>
           <div class="req-right">
-            <span class="req-date">${date}</span>
+            <span class="req-date" id="date-${r._id}">${dateLabel}</span>
             <span class="badge ${done ? 'badge-received' : 'badge-pending'}" id="badge-${r._id}">${done ? 'Done' : 'Pending'}</span>
             <button class="del-btn" onclick="deleteRequest('${r._id}')" title="Delete">🗑</button>
           </div>
@@ -222,15 +224,25 @@
   async function toggleDone(id, checked) {
     const status = checked ? 'Done' : 'Pending';
     try {
-      await fetch(`/api/requests/${id}`, {
+      const updated = await fetch(`/api/requests/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
-      });
+      }).then(r => r.json());
       const card  = document.getElementById(`card-${id}`);
       const badge = document.getElementById(`badge-${id}`);
+      const dateEl = document.getElementById(`date-${id}`);
       if (card)  { card.className  = `req-row${checked ? ' done' : ''}`; }
       if (badge) { badge.className = `badge ${checked ? 'badge-received' : 'badge-pending'}`; badge.textContent = status; }
+      if (dateEl) {
+        if (checked && updated.completedAt) {
+          const d = new Date(updated.completedAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short' });
+          dateEl.textContent = `✅ ${d}`;
+        } else {
+          const d = new Date(updated.createdAt).toLocaleDateString('en-GB', { day:'2-digit', month:'short' });
+          dateEl.textContent = d;
+        }
+      }
       updateStats(allRequests);
     } catch (err) { alert('Update failed: ' + err.message); }
   }

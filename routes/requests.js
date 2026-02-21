@@ -94,6 +94,11 @@ router.get('/:id', async (req, res) => {
 router.patch('/:id', async (req, res) => {
     try {
         const updates = { ...req.body, updatedAt: new Date() };
+        if (req.body.status === 'Done') {
+            updates.completedAt = new Date();
+        } else if (req.body.status && req.body.status !== 'Done') {
+            updates.completedAt = null;
+        }
         const r = await ProcurementRequest.findByIdAndUpdate(
             req.params.id,
             { $set: updates },

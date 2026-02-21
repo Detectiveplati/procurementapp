@@ -38,8 +38,9 @@ const ProcurementRequestSchema = new mongoose.Schema({
     purchaserNotes:  { type: String, default: '' },
 
     // ── Timestamps ────────────────────────────────────────────────────────────
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now }
+    createdAt:   { type: Date, default: Date.now },
+    updatedAt:   { type: Date, default: Date.now },
+    completedAt: { type: Date, default: null }
 });
 
 // Auto-update updatedAt on save
