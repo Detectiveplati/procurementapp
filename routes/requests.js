@@ -1,22 +1,29 @@
 const express  = require('express');
 const router   = express.Router();
 const multer   = require('multer');
-const path     = require('path');
-const fs       = require('fs');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const ProcurementRequest = require('../models/ProcurementRequest');
 
-// Multer setup (reuse server upload dir)
-const uploadDir = path.join(__dirname, '..', 'uploads');
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, uploadDir),
-    filename:    (req, file, cb) => {
-        const safe = file.originalname.replace(/[^a-zA-Z0-9.\-_]/g, '_');
-        cb(null, `${Date.now()}-${safe}`);
+// ─── Cloudinary config ────────────────────────────────────────────────────────
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key:    process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const storage = new CloudinaryStorage({
+    cloudinary,
+    params: {
+        folder:          'procurement',
+        allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'heic', 'heif'],
+        transformation:  [{ width: 1200, crop: 'limit', quality: 'auto:good', fetch_format: 'webp' }]
     }
 });
+
 const upload = multer({
     storage,
-    limits: { fileSize: 5 * 1024 * 1024 },
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB raw (Cloudinary compresses output)
     fileFilter: (req, file, cb) => {
         if (file.mimetype.startsWith('image/')) cb(null, true);
         else cb(new Error('Only image files are allowed'));
@@ -30,7 +37,7 @@ const upload = multer({
 router.post('/', upload.single('image'), async (req, res) => {
     try {
         const data = { ...req.body };
-        if (req.file) data.imagePath = `/uploads/${req.file.filename}`;
+        if (req.file) data.imagePath = req.file.path; // Cloudinary HTTPS URL
 
         // Parse checklist if sent as JSON string
         if (typeof data.checklist === 'string') {
