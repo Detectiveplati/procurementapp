@@ -23,7 +23,7 @@ const ProcurementRequestSchema = new mongoose.Schema({
     // ── Status & purchaser checklist ──────────────────────────────────────────
     status: {
         type: String,
-        enum: ['Pending', 'Approved', 'Ordered', 'Received', 'Cancelled'],
+        enum: ['Pending', 'Done', 'Approved', 'Ordered', 'Received', 'Cancelled'],
         default: 'Pending'
     },
     checklist: {

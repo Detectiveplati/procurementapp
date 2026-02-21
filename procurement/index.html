@@ -24,6 +24,15 @@
 
 <main>
   <div class="card" style="max-width:700px;margin:0 auto 20px;">
+    <h2>📊 Quick Stats</h2>
+    <div class="stats-bar" id="statsBar">
+      <div class="stat-box"><div class="num" id="statTotal">—</div><div class="lbl">Total</div></div>
+      <div class="stat-box"><div class="num" id="statPending">—</div><div class="lbl">Pending</div></div>
+      <div class="stat-box"><div class="num" id="statDone">—</div><div class="lbl">Done</div></div>
+    </div>
+  </div>
+
+  <div class="card" style="max-width:700px;margin:0 auto 20px;">
     <div class="qr-container">
       <h2>📱 Scan to Submit a Request</h2>
       <p>Staff can scan this QR code with any phone or tablet to submit a procurement request.</p>
@@ -36,16 +45,6 @@
       </div>
     </div>
   </div>
-
-  <div class="card" style="max-width:700px;margin:0 auto;">
-    <h2>📊 Quick Stats</h2>
-    <div class="stats-bar" id="statsBar">
-      <div class="stat-box"><div class="num" id="statTotal">—</div><div class="lbl">Total</div></div>
-      <div class="stat-box"><div class="num" id="statPending">—</div><div class="lbl">Pending</div></div>
-      <div class="stat-box"><div class="num" id="statOrdered">—</div><div class="lbl">Ordered</div></div>
-      <div class="stat-box"><div class="num" id="statReceived">—</div><div class="lbl">Received</div></div>
-    </div>
-  </div>
 </main>
 
 <script>
@@ -56,8 +55,7 @@
       const all = await fetch('/api/requests').then(r => r.json());
       document.getElementById('statTotal').textContent   = all.length;
       document.getElementById('statPending').textContent = all.filter(r => r.status === 'Pending').length;
-      document.getElementById('statOrdered').textContent = all.filter(r => r.status === 'Ordered').length;
-      document.getElementById('statReceived').textContent= all.filter(r => r.status === 'Received').length;
+      document.getElementById('statDone').textContent    = all.filter(r => r.status === 'Done').length;
     } catch(_) {}
   }
   loadStats();
