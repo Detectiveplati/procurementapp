@@ -13,10 +13,13 @@
     }
     .back-link:hover { color: var(--accent); }
 
-    /* ── Field rows inside cards ── */
-    .field-list { display: flex; flex-direction: column; }
-    .field-row {
-      display: flex; align-items: baseline; gap: 12px;
+    .item-name   { font-size: 1.5rem; font-weight: 800; color: var(--ink); margin-bottom: 2px; }
+    .item-zh     { font-size: 0.95rem; color: var(--muted); margin-bottom: 12px; }
+    .item-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 4px; }
+
+    .field-list  { display: flex; flex-direction: column; margin-top: 14px; }
+    .field-row   {
+      display: flex; align-items: baseline; gap: 14px;
       padding: 9px 0; border-bottom: 1px solid var(--border);
     }
     .field-row:last-child { border-bottom: none; }
@@ -25,85 +28,66 @@
       letter-spacing: 0.06em; color: var(--muted);
       min-width: 130px; flex-shrink: 0;
     }
-    .field-val { font-size: 0.92rem; font-weight: 600; color: var(--ink); }
+    .field-val { font-size: 0.93rem; font-weight: 600; color: var(--ink); }
     .field-val.empty { color: var(--muted); font-weight: 400; font-style: italic; }
 
-    /* ── Item name at top of card ── */
-    .item-title { font-size: 1.45rem; font-weight: 800; color: var(--ink); margin-bottom: 2px; }
-    .item-zh    { font-size: 0.95rem; color: var(--muted); margin-bottom: 14px; }
-    .item-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .timestamps {
+      font-size: 0.75rem; color: var(--muted);
+      display: flex; gap: 20px; flex-wrap: wrap; margin-top: 14px;
+    }
+    .timestamps strong { color: var(--ink); }
 
-    /* ── Photo ── */
     .req-photo {
-      width: 100%; max-height: 340px; object-fit: contain;
+      width: 100%; max-height: 360px; object-fit: contain;
       border-radius: 10px; border: 1px solid var(--border);
       background: #f6f4f0; cursor: zoom-in; display: block;
     }
-    .no-photo {
-      height: 100px; background: #f0ece8;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--muted); font-size: 0.85rem;
-      border-radius: 10px; border: 1px solid var(--border);
-    }
 
-    /* ── Requestor comment quote ── */
-    .req-comment-block {
+    .comment-block {
       background: #fdf8f5; border-left: 3px solid var(--accent-2);
-      border-radius: 0 8px 8px 0; padding: 10px 14px;
-      font-size: 0.9rem; color: var(--ink); line-height: 1.55;
+      border-radius: 0 8px 8px 0; padding: 11px 14px;
+      font-size: 0.92rem; color: var(--ink); line-height: 1.55;
+      margin-top: 14px;
     }
 
-    /* ── Status row ── */
-    .status-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .status-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
     .status-sel {
       flex: 1; min-width: 140px; padding: 9px 12px;
       border-radius: 8px; border: 1px solid var(--border);
-      font-family: inherit; font-size: 0.88rem;
+      font-family: inherit; font-size: 0.9rem;
       background: var(--card); color: var(--ink); outline: none;
       transition: border-color 0.2s; cursor: pointer;
     }
-    .status-sel:focus { border-color: var(--accent); }
+    .status-sel:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(192,57,43,0.08); }
 
-    /* ── Purchaser notes ── */
     .notes-area {
-      width: 100%; min-height: 110px;
+      width: 100%; min-height: 110px; margin-top: 10px;
       border: 1px solid var(--border); border-radius: 8px;
       padding: 10px 14px; font-family: inherit; font-size: 0.9rem;
       color: var(--ink); background: var(--card);
       resize: vertical; box-sizing: border-box; outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      line-height: 1.5;
+      transition: border-color 0.2s, box-shadow 0.2s; line-height: 1.5;
     }
-    .notes-area:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(192,57,43,0.09);
+    .notes-area:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(192,57,43,0.08); }
+
+    .sub-lbl {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0;
     }
 
-    /* ── Timestamps ── */
-    .timestamps {
-      font-size: 0.75rem; color: var(--muted);
-      display: flex; gap: 20px; flex-wrap: wrap; margin-top: 16px;
-    }
-    .timestamps strong { color: var(--ink); }
-
-    /* ── Save feedback ── */
     .save-row { display: flex; gap: 10px; align-items: center; margin-top: 14px; }
     .save-msg  { font-size: 0.8rem; color: var(--success); opacity: 0; transition: opacity 0.4s; }
     .save-msg.show { opacity: 1; }
 
     #errorMsg { color: var(--accent); text-align: center; padding: 40px; font-weight: 600; }
 
-    /* ── Modal ── */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.78);
       display: none; align-items: center; justify-content: center;
       z-index: 9999; cursor: zoom-out;
     }
     .modal-overlay.open { display: flex; }
-    .modal-overlay img {
-      max-width: 92vw; max-height: 90vh;
-      border-radius: 10px; box-shadow: 0 8px 40px rgba(0,0,0,0.5);
-    }
+    .modal-overlay img { max-width: 92vw; max-height: 90vh; border-radius: 10px; box-shadow: 0 8px 40px rgba(0,0,0,0.5); }
   </style>
 </head>
 <body>
@@ -130,10 +114,11 @@
 
   <div id="pageBody" style="display:none;">
 
-    <!-- Item -->
-    <div class="card">
-      <div class="item-title" id="dItemEn"></div>
-      <div class="item-zh"    id="dItemZh"></div>
+    <!-- Item Details -->
+    <div class="card" style="max-width:700px;margin:0 auto 20px;">
+      <h2>📦 Item Details</h2>
+      <div class="item-name" id="dItemEn"></div>
+      <div class="item-zh"   id="dItemZh"></div>
       <div class="item-badges">
         <span id="dStatusBadge"></span>
         <span id="dPriorityBadge"></span>
@@ -164,16 +149,16 @@
     </div>
 
     <!-- Photo -->
-    <div class="card" id="cardPhoto">
+    <div class="card" id="cardPhoto" style="max-width:700px;margin:0 auto 20px;display:none;">
       <h2>🖼 Photo</h2>
       <img class="req-photo" id="dImage" src="" alt="Item photo"
            title="Click to enlarge" onclick="openModal(this.src)"/>
     </div>
 
     <!-- Requestor -->
-    <div class="card">
+    <div class="card" style="max-width:700px;margin:0 auto 20px;">
       <h2>👤 Requestor</h2>
-      <div class="field-list">
+      <div class="field-list" style="margin-top:0;">
         <div class="field-row">
           <span class="field-lbl">Name</span>
           <span class="field-val" id="dName">—</span>
@@ -183,17 +168,16 @@
           <span class="field-val" id="dDepartment">—</span>
         </div>
       </div>
-      <div id="commentWrap" style="display:none; margin-top:14px;">
-        <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-bottom:8px;">Comment</div>
-        <div class="req-comment-block" id="dComments"></div>
+      <div id="commentWrap" style="display:none;">
+        <div class="comment-block" id="dComments"></div>
       </div>
     </div>
 
     <!-- Purchaser -->
-    <div class="card">
+    <div class="card" style="max-width:700px;margin:0 auto 20px;">
       <h2>⚙️ Purchaser</h2>
 
-      <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-bottom:8px;">Status</div>
+      <div class="sub-lbl">Status</div>
       <div class="status-row" style="margin-bottom:20px;">
         <select class="status-sel" id="statusSelect">
           <option value="Pending">Pending</option>
@@ -207,7 +191,7 @@
         <span class="save-msg" id="statusMsg">✓ Saved</span>
       </div>
 
-      <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-bottom:8px;">Purchaser Notes</div>
+      <div class="sub-lbl">Purchaser Notes</div>
       <textarea class="notes-area" id="purchaserNotes" placeholder="Add internal notes, supplier contact, price quotes…"></textarea>
 
       <div class="save-row">
@@ -216,7 +200,7 @@
       </div>
     </div>
 
-  </div><!-- /pageBody -->
+  </div>
 </main>
 
 <div class="modal-overlay" id="imgModal" onclick="this.classList.remove('open')">
@@ -245,15 +229,15 @@
       document.title = `${r.itemNameEn} · Procurement`;
       document.getElementById('pageTitle').textContent = r.itemNameEn;
 
-      // Item
       document.getElementById('dItemEn').textContent = r.itemNameEn;
       if (r.itemNameZh) document.getElementById('dItemZh').textContent = r.itemNameZh;
+
       document.getElementById('dStatusBadge').innerHTML =
         `<span class="badge ${STATUS_CLS[r.status] || 'badge-pending'}">${r.status || 'Pending'}</span>`;
       document.getElementById('dPriorityBadge').innerHTML =
         r.priority ? `<span class="badge ${PRIORITY_CLS[r.priority] || ''}">${r.priority}</span>` : '';
       document.getElementById('dCategoryBadge').innerHTML =
-        r.category ? `<span class="badge badge-pending" style="background:#f0ece8;color:var(--muted);border:1px solid var(--border)">${r.category}</span>` : '';
+        r.category ? `<span class="badge badge-low" style="background:#efe8e5;color:var(--muted);">${r.category}</span>` : '';
 
       document.getElementById('dQuantity').textContent =
         r.quantity ? r.quantity + (r.unit ? ' ' + r.unit : '') : '—';
@@ -263,15 +247,11 @@
       document.getElementById('dCreated').textContent = fmt(r.createdAt);
       document.getElementById('dUpdated').textContent = fmt(r.updatedAt);
 
-      // Photo
       if (r.imagePath) {
         document.getElementById('dImage').src = r.imagePath;
         document.getElementById('cardPhoto').style.display = '';
-      } else {
-        document.getElementById('cardPhoto').style.display = 'none';
       }
 
-      // Requestor
       setField('dName',       r.requestorName);
       setField('dDepartment', r.department);
       if (r.comments) {
@@ -279,16 +259,15 @@
         document.getElementById('commentWrap').style.display = '';
       }
 
-      // Purchaser
-      document.getElementById('statusSelect').value    = r.status || 'Pending';
-      document.getElementById('purchaserNotes').value  = r.purchaserNotes || '';
+      document.getElementById('statusSelect').value   = r.status || 'Pending';
+      document.getElementById('purchaserNotes').value = r.purchaserNotes || '';
 
       document.getElementById('pageBody').style.display = '';
 
     } catch (err) {
       const el = document.getElementById('errorMsg');
       el.style.display = '';
-      el.textContent = 'Failed to load request: ' + err.message;
+      el.textContent = 'Failed to load: ' + err.message;
     }
   }
 
