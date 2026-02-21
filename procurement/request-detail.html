@@ -121,7 +121,6 @@
       <div class="item-zh"   id="dItemZh"></div>
       <div class="item-badges">
         <span id="dStatusBadge"></span>
-        <span id="dPriorityBadge"></span>
         <span id="dCategoryBadge"></span>
       </div>
       <div class="field-list">
@@ -203,10 +202,6 @@
     Approved: 'badge-approved', Ordered: 'badge-ordered',
     Received: 'badge-received', Cancelled: 'badge-cancelled',
   };
-  const PRIORITY_CLS = {
-    Low: 'badge-low', High: 'badge-high', Urgent: 'badge-urgent'
-  };
-
   async function loadRequest() {
     try {
       const r = await fetch(`/api/requests/${id}`).then(res => {
@@ -222,8 +217,6 @@
 
       document.getElementById('dStatusBadge').innerHTML =
         `<span class="badge ${STATUS_CLS[r.status] || 'badge-pending'}">${r.status || 'Pending'}</span>`;
-      document.getElementById('dPriorityBadge').innerHTML =
-        r.priority ? `<span class="badge ${PRIORITY_CLS[r.priority] || ''}">${r.priority}</span>` : '';
       document.getElementById('dCategoryBadge').innerHTML =
         r.category ? `<span class="badge badge-low" style="background:#efe8e5;color:var(--muted);">${r.category}</span>` : '';
 
