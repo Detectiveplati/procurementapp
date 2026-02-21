@@ -9,7 +9,7 @@ const ProcurementRequestSchema = new mongoose.Schema({
     unit:           { type: String, default: '' },                  // kg, pcs, box…
     estimatedPrice: { type: String, default: '' },
     supplier:       { type: String, default: '' },
-    priority:       { type: String, enum: ['Low', 'Medium', 'High', 'Urgent'], default: 'Medium' },
+    priority:       { type: String, enum: ['Low', 'High', 'Urgent'], default: 'Low' },
     dateNeeded:     { type: String, default: '' },
 
     // ── Requester info ────────────────────────────────────────────────────────
