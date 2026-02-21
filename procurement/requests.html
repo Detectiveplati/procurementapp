@@ -51,7 +51,10 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      text-decoration: none;
+      display: block;
     }
+    .req-name:hover { color: var(--accent); text-decoration: underline; }
     .req-meta {
       display: flex;
       flex-wrap: wrap;
@@ -202,7 +205,7 @@
           </div>
           ${thumb}
           <div class="req-body">
-            <div class="req-name">${escHtml(r.itemNameEn)}</div>
+            <a class="req-name" href="/request/${r._id}">${escHtml(r.itemNameEn)}</a>
             <div class="req-meta"><span>${meta}</span></div>
             ${r.comments ? `<div class="req-comment">💬 ${escHtml(r.comments)}</div>` : ''}
           </div>

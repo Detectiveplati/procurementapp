@@ -55,9 +55,10 @@ const noCacheHtml = {
 app.use(express.static(path.join(__dirname, 'procurement'), noCacheHtml));
 
 // ─── Page routes ──────────────────────────────────────────────────────────────
-app.get('/',           (req, res) => res.sendFile(path.join(__dirname, 'procurement', 'index.html')));
-app.get('/request',    (req, res) => res.sendFile(path.join(__dirname, 'procurement', 'request-form.html')));
-app.get('/requests',   (req, res) => res.sendFile(path.join(__dirname, 'procurement', 'requests.html')));
+app.get('/',            (req, res) => res.sendFile(path.join(__dirname, 'procurement', 'index.html')));
+app.get('/request',     (req, res) => res.sendFile(path.join(__dirname, 'procurement', 'request-form.html')));
+app.get('/requests',    (req, res) => res.sendFile(path.join(__dirname, 'procurement', 'requests.html')));
+app.get('/request/:id', (req, res) => res.sendFile(path.join(__dirname, 'procurement', 'request-detail.html')));
 
 // ─── API routes ───────────────────────────────────────────────────────────────
 const requestsRouter = require('./routes/requests');
